@@ -21,4 +21,5 @@ Right now from the top of my head planning to cover this scenarios:
 # UVM Testbench Architecture
 
 From previous projects, I will take the UVM testbench and adopt it to this DUT.
-There will be a agent for input and agent for output. Input agent will have driver, sequencer and monitor. Output agent will have output monitor only.
+There will be a seperate master agent for each bit of the bus request.
+Each agent will have a single monitor because the grant and request should be going to a single master.
