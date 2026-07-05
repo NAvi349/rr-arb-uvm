@@ -23,3 +23,7 @@ Right now from the top of my head planning to cover this scenarios:
 From previous projects, I will take the UVM testbench and adopt it to this DUT.
 There will be a seperate master agent for each bit of the bus request.
 Each agent will have a single monitor because the grant and request should be going to a single master.
+An output global monitor for status signals which are not needed for the masters.
+
+The scoreboard will get the signals and write to its internal memory during write transactions. During read transactions the information is read back.
+The round robin arbitation will be checked in scoreboard
