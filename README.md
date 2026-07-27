@@ -27,3 +27,5 @@ An output global monitor for status signals which are not needed for the masters
 
 The scoreboard will get the signals and write to its internal memory during write transactions. During read transactions the information is read back.
 The round robin arbitation will be checked in scoreboard
+
+I created a parameterized agents for this design, since it is expected to have four master. Each agent represents one master.
