@@ -10,8 +10,9 @@ class ahb_rr_env extends uvm_env;
   parameter int NUM_MAST = 4;
   
   ahb_rr_master_agent ahb_m_agt[NUM_MAST]; // agent for the masters  
-  ahb_rr_output_agent ahb_o_agt;  // agent for the output status signals
-  ahb_rr_scoreboard ahb_scbd;  // scoreboard
+  ahb_rr_output_agent ahb_o_agt;           // agent for the output status signals
+  ahb_rr_scoreboard ahb_scbd;              // scoreboard
+  ahb_rr_reset_agent ahb_rr_agt;           // reset agent
   
   
   function new(string name = "ahb_rr_env", uvm_component parent);
@@ -21,9 +22,11 @@ class ahb_rr_env extends uvm_env;
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     
+    ahb_rr_agt  = ahb_rr_reset_agent::type_id::create("ahb_rr_agt", this);
+    
     for (int i = 0; i < NUM_MAST; i++) begin
       ahb_m_agt[i] = ahb_rr_master_agent::type_id::create($sformatf("ahb_m[%0d]_agt", i), this);
-      uvm_config_db#(int)::set(this, "*", "agent_id", i);
+      uvm_config_db#(int)::set(this, $sformatf("ahb_m[%0d]_agt.*", i), "agent_id", i);
     end
     
     ahb_o_agt   = ahb_rr_output_agent::type_id::create("ahb_o_agt", this);
