@@ -1,5 +1,50 @@
 class ahb_rr_item extends uvm_sequence_item;
   
+  logic   hbusreq;
+  logic   hlock;
+  rand logic [31:0] haddr;
+  
+  logic [ 1:0] htrans;
+
+  logic        hwrite;
+ 
+  logic [ 2:0] hsize;
+  
+  rand logic [31:0] hwdata;
+  
+  logic  hgrant;
+  logic [ 1:0] hmaster;
+  logic        hmastlock;
+  logic [31:0] hrdata;
+  logic        hready;
+  logic [ 1:0] hresp;
+
+  
+  `uvm_object_utils(ahb_rr_item)
+  
+  function new(string name="ahb_rr_item");
+    super.new(name);
+  endfunction
+  
+  function string convert2string_with_index(int i = 0);
+    string s;
+    s = super.convert2string();
+    s = {s, $sformatf("\n===== AHB RR Transaction =====")};
+    s = {s, $sformatf("\n  hbusreq = %b | hlock = %b", hbusreq, hlock)};
+    
+    s = {s, $sformatf("\n  --- Master %d ---", i)};
+    s = {s, $sformatf("\n    haddr[%0d]=%0h htrans[%0d]=%0b hwrite[%0d]=%0b hsize[%0d]=%0b hwdata[%0d]=%0h", i, haddr, i, htrans, i, hwrite, i, hsize, i, hwdata)};
+        
+    s = {s, $sformatf("\n  --- Arbiter/Slave Response ---")};
+    s = {s, $sformatf("\n    hgrant=%0b hmaster=%0d hmastlock=%0b", hgrant, hmaster, hmastlock)};
+    s = {s, $sformatf("\n    hrdata=%0h hready=%0b hresp=%0b", hrdata, hready, hresp)};
+    s = {s, $sformatf("\n================================")};
+    return s;
+  endfunction
+   
+  
+endclassclass ahb_rr_item extends uvm_sequence_item;
+  
   logic  [3:0] hbusreq;
   logic  [3:0] hlock;
   logic [31:0] haddr;
