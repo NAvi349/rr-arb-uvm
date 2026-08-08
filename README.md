@@ -1,5 +1,5 @@
 # rr-arb-uvm
-This repository contains the UVM architecture of a round robin arbiter
+This repository contains the UVM architecture of a AHB round robin arbiter
 
 
 # DUT
