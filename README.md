@@ -15,14 +15,15 @@ I First asserted all the req and observed how the grant is given one by one.
 
 # Testplan
 Right now from the top of my head planning to cover this scenarios:
-* Assert request for master and observe if the grant is correctly done in round robin manner.
+* Assert request for all masters and observe if the grant is correctly served in round robin manner.
 * Check if asserting req for a single master is eventually granted.
+* Check if grant is asserted for a full AHB transactions for each master.
+* 
 
 # UVM Testbench Architecture
 
-From previous projects, I will take the UVM testbench and adopt it to this DUT.
 There will be a seperate master agent for each bit of the bus request.
-Each agent will have a single monitor because the grant and request should be going to a single master.
+Each agent will have a monitor because the grant and request should be going to a single master.
 An output global monitor for status signals which are not needed for the masters.
 
 The scoreboard will get the signals and write to its internal memory during write transactions. During read transactions the information is read back.
