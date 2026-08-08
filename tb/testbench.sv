@@ -8,6 +8,7 @@ import uvm_pkg::*;
 `include "ahb_rr_master_monitor.sv"
 `include "ahb_rr_output_monitor.sv"
 `include "ahb_rr_scoreboard.sv"
+`include "ahb_rr_reset_agent.sv"
 `include "ahb_rr_master_agent.sv"
 `include "ahb_rr_output_agent.sv"
 `include "ahb_rr_env.sv"
@@ -20,15 +21,23 @@ module testbench;
   bit rst_n;
   genvar i;  
   
-  ahb_rr_if ahb_xif0(.clock(clk), .rst_n(rst_n));
-  ahb_rr_if ahb_xif1(.clock(clk), .rst_n(rst_n));
-  ahb_rr_if ahb_xif2(.clock(clk), .rst_n(rst_n));
-  ahb_rr_if ahb_xif3(.clock(clk), .rst_n(rst_n));
+  ahb_rr_rst_if ahb_rst_xif(.clock(clk));
+  ahb_rr_if ahb_xif0(.clock(clk));
+  ahb_rr_if ahb_xif1(.clock(clk));
+  ahb_rr_if ahb_xif2(.clock(clk));
+  ahb_rr_if ahb_xif3(.clock(clk));
+  
+  assign rst_n = ahb_rst_xif.rst_n;
+  
+  assign ahb_xif0.rst_n = rst_n;
+  assign ahb_xif1.rst_n = rst_n;
+  assign ahb_xif2.rst_n = rst_n;
+  assign ahb_xif3.rst_n = rst_n;
   
   //ahb_rr_if ahb_sts_if(.clock(clk), .rst_n(rst_n));
   
   ahb_top uut(.HCLK(clk),
-              .HRESETn(rst_n),
+              .HRESETn(ahb_rst_xif.rst_n),
               .HBUSREQ({ahb_xif3.hbusreq, ahb_xif2.hbusreq, ahb_xif1.hbusreq, ahb_xif0.hbusreq}),
               .HLOCK({ahb_xif3.hlock, ahb_xif2.hlock, ahb_xif1.hlock, ahb_xif0.hlock}),
               .HADDR0(ahb_xif0.haddr),
@@ -60,6 +69,7 @@ module testbench;
              );
 
   initial begin
+    uvm_config_db#(virtual ahb_rr_rst_if)::set(null, "uvm_test_top.ahb_rr_env.*", "ahb_rr_rst_if", ahb_rst_xif);
     uvm_config_db#(virtual ahb_rr_if)::set(null, "uvm_test_top.ahb_rr_env.ahb_m[0]_agt.*", "ahb_rr_if", ahb_xif0);
     uvm_config_db#(virtual ahb_rr_if)::set(null, "uvm_test_top.ahb_rr_env.ahb_m[1]_agt.*", "ahb_rr_if", ahb_xif1);
     uvm_config_db#(virtual ahb_rr_if)::set(null, "uvm_test_top.ahb_rr_env.ahb_m[2]_agt.*", "ahb_rr_if", ahb_xif2);
@@ -72,12 +82,12 @@ module testbench;
   
   initial begin
     clk <= 0;
-    rst_n <= 0;
+    //rst_n <= 0;
     
-    #20ns;
+    //#20ns;
     
-    $display("reset released from testbench top");
-    rst_n <= 1;
+    //$display("reset released from testbench top");
+    //rst_n <= 1;
 
     
     //#50ns;
